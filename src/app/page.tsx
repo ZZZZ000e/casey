@@ -25,7 +25,6 @@ export default function ChatPage() {
   const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // 自动滚动到底部
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -115,75 +114,80 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50">
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', background: 'linear-gradient(135deg, #fdf2f8, #f3e8ff, #e0e7ff)' }}>
       {/* Header */}
-      <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-10">
-        <div className="container mx-auto flex h-16 items-center justify-between px-4 max-w-4xl">
-          <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-pink-500 to-purple-600 shadow-lg">
-              <span className="text-white text-2xl">❤️</span>
+      <header style={{ borderBottom: '1px solid #e5e7eb', background: 'rgba(255, 255, 255, 0.8)', backdropFilter: 'blur(10px)', position: 'sticky', top: 0, zIndex: 10 }}>
+        <div style={{ maxWidth: '896px', margin: '0 auto', display: 'flex', height: '64px', alignItems: 'center', justifyContent: 'space-between', padding: '0 16px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{ display: 'flex', height: '48px', width: '48px', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', background: 'linear-gradient(135deg, #ec4899, #8b5cf6)', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}>
+              <span style={{ fontSize: '24px' }}>❤️</span>
             </div>
             <div>
-              <h1 className="text-xl font-bold text-gray-900">
+              <h1 style={{ fontSize: '20px', fontWeight: 'bold', color: '#111827', margin: 0 }}>
                 Casey - 情感咨询师
               </h1>
-              <p className="text-sm text-gray-500">你的情感陪伴者</p>
+              <p style={{ fontSize: '14px', color: '#6b7280', margin: 0 }}>你的情感陪伴者</p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="flex h-3 w-3 items-center justify-center rounded-full bg-green-500">
-              <div className="h-1.5 w-1.5 animate-ping rounded-full bg-green-500" />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div style={{ display: 'flex', height: '12px', width: '12px', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', background: '#22c55e' }}>
+              <div style={{ height: '6px', width: '6px', borderRadius: '50%', background: '#22c55e', animation: 'ping 1s cubic-bezier(0, 0, 0.2, 1) infinite' }}></div>
             </div>
-            <span className="text-xs text-gray-500">在线</span>
+            <span style={{ fontSize: '12px', color: '#6b7280' }}>在线</span>
           </div>
         </div>
       </header>
 
       {/* Chat Messages */}
-      <div 
-        className="flex-1 overflow-y-auto p-4"
-        ref={scrollRef}
-      >
-        <div className="container mx-auto max-w-4xl">
+      <div style={{ flex: 1, overflowY: 'auto', padding: '16px' }} ref={scrollRef}>
+        <div style={{ maxWidth: '896px', margin: '0 auto' }}>
           {messages.map((message) => (
             <div
               key={message.id}
-              className={`flex gap-3 mb-6 ${
-                message.role === 'user' ? 'justify-end' : 'justify-start'
-              }`}
+              style={{
+                display: 'flex',
+                gap: '12px',
+                marginBottom: '24px',
+                justifyContent: message.role === 'user' ? 'flex-end' : 'flex-start'
+              }}
             >
               {message.role === 'assistant' && (
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-pink-500 to-purple-600 shadow-md">
-                  <span className="text-white text-lg">❤️</span>
+                <div style={{ display: 'flex', height: '40px', width: '40px', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', background: 'linear-gradient(135deg, #ec4899, #8b5cf6)', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
+                  <span style={{ fontSize: '18px' }}>❤️</span>
                 </div>
               )}
               <div
-                className={`max-w-[80%] rounded-2xl px-5 py-4 shadow-md ${
-                  message.role === 'user'
-                    ? 'bg-gradient-to-br from-pink-500 to-purple-600 text-white'
-                    : 'bg-white text-gray-900'
-                }`}
+                style={{
+                  maxWidth: '80%',
+                  borderRadius: '16px',
+                  padding: '20px',
+                  boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+                  background: message.role === 'user'
+                    ? 'linear-gradient(135deg, #ec4899, #8b5cf6)'
+                    : 'white',
+                  color: message.role === 'user' ? 'white' : '#111827'
+                }}
               >
                 {message.content}
               </div>
               {message.role === 'user' && (
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gray-300 shadow-md">
-                  <span className="text-white text-lg">👤</span>
+                <div style={{ display: 'flex', height: '40px', width: '40px', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', background: '#d1d5db', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
+                  <span style={{ fontSize: '18px' }}>👤</span>
                 </div>
               )}
             </div>
           ))}
 
           {isTyping && (
-            <div className="flex gap-3 mb-6">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-pink-500 to-purple-600 shadow-md">
-                <span className="text-white text-lg">❤️</span>
+            <div style={{ display: 'flex', gap: '12px', marginBottom: '24px' }}>
+              <div style={{ display: 'flex', height: '40px', width: '40px', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', background: 'linear-gradient(135deg, #ec4899, #8b5cf6)', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
+                <span style={{ fontSize: '18px' }}>❤️</span>
               </div>
-              <div className="bg-white rounded-2xl px-5 py-4 shadow-md">
-                <div className="flex gap-1.5">
-                  <div className="h-2 w-2 animate-bounce rounded-full bg-purple-500" />
-                  <div className="h-2 w-2 animate-bounce rounded-full bg-purple-500" style={{ animationDelay: '0.1s' }} />
-                  <div className="h-2 w-2 animate-bounce rounded-full bg-purple-500" style={{ animationDelay: '0.2s' }} />
+              <div style={{ background: 'white', borderRadius: '16px', padding: '20px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
+                <div style={{ display: 'flex', gap: '6px' }}>
+                  <div style={{ height: '8px', width: '8px', borderRadius: '50%', background: '#8b5cf6', animation: 'bounce 0.5s infinite' }}></div>
+                  <div style={{ height: '8px', width: '8px', borderRadius: '50%', background: '#8b5cf6', animation: 'bounce 0.5s 0.1s infinite' }}></div>
+                  <div style={{ height: '8px', width: '8px', borderRadius: '50%', background: '#8b5cf6', animation: 'bounce 0.5s 0.2s infinite' }}></div>
                 </div>
               </div>
             </div>
@@ -192,38 +196,54 @@ export default function ChatPage() {
       </div>
 
       {/* Input Area */}
-      <div className="border-t bg-white/80 backdrop-blur-sm sticky bottom-0">
-        <div className="container mx-auto px-4 py-6">
-          <div className="mx-auto max-w-4xl">
-            <div className="flex gap-3 items-end">
-              <div className="flex-1">
-                <input
-                  type="text"
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                      e.preventDefault();
-                      handleSend();
-                    }
-                  }}
-                  placeholder="分享你的故事，我在这里倾听..."
-                  disabled={isTyping}
-                  className="w-full px-5 py-4 border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-lg disabled:opacity-50 transition-all"
-                />
-              </div>
-              <button
-                onClick={handleSend}
-                disabled={!input.trim() || isTyping}
-                className="px-8 py-4 bg-gradient-to-br from-pink-500 to-purple-600 text-white font-bold rounded-2xl hover:from-pink-600 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-xl text-lg"
-              >
-                发送
-              </button>
+      <div style={{ borderTop: '1px solid #e5e7eb', background: 'rgba(255, 255, 255, 0.8)', backdropFilter: 'blur(10px)', position: 'sticky', bottom: 0 }}>
+        <div style={{ maxWidth: '896px', margin: '0 auto', padding: '24px 16px' }}>
+          <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-end' }}>
+            <div style={{ flex: 1 }}>
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSend();
+                  }
+                }}
+                placeholder="分享你的故事，我在这里倾听..."
+                disabled={isTyping}
+                style={{
+                  width: '100%',
+                  padding: '16px 20px',
+                  border: '2px solid #e5e7eb',
+                  borderRadius: '16px',
+                  outline: 'none',
+                  fontSize: '18px',
+                  opacity: isTyping ? 0.5 : 1
+                }}
+              />
             </div>
-            <p className="text-center text-xs text-gray-400 mt-3">
-              按 Enter 发送消息，Shift + Enter 换行
-            </p>
+            <button
+              onClick={handleSend}
+              disabled={!input.trim() || isTyping}
+              style={{
+                padding: '16px 32px',
+                background: 'linear-gradient(135deg, #ec4899, #8b5cf6)',
+                color: 'white',
+                fontWeight: 'bold',
+                borderRadius: '16px',
+                border: 'none',
+                fontSize: '18px',
+                cursor: input.trim() && !isTyping ? 'pointer' : 'not-allowed',
+                opacity: (input.trim() && !isTyping) ? 1 : 0.5
+              }}
+            >
+              发送
+            </button>
           </div>
+          <p style={{ textAlign: 'center', fontSize: '12px', color: '#9ca3af', marginTop: '12px', margin: '12px 0 0 0' }}>
+            按 Enter 发送消息，Shift + Enter 换行
+          </p>
         </div>
       </div>
     </div>
