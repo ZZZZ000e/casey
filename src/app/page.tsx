@@ -1,8 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
-// 配置 API 地址
 const API_BASE_URL = 'http://9.129.248.155:5000';
 
 interface Message {
@@ -24,9 +23,17 @@ export default function ChatPage() {
   ]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  // 自动滚动到底部
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [messages, isTyping]);
 
   const handleSend = async () => {
-    if (!input.trim()) return;
+    if (!input.trim() || isTyping) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -110,64 +117,73 @@ export default function ChatPage() {
   return (
     <div className="flex flex-col h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50">
       {/* Header */}
-      <header className="border-b bg-white/80 backdrop-blur-sm">
-        <div className="container mx-auto flex h-16 items-center justify-between px-4">
+      <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-10">
+        <div className="container mx-auto flex h-16 items-center justify-between px-4 max-w-4xl">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-pink-500 to-purple-600">
-              <span className="text-white text-xl">❤️</span>
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-pink-500 to-purple-600 shadow-lg">
+              <span className="text-white text-2xl">❤️</span>
             </div>
             <div>
-              <h1 className="text-lg font-semibold text-gray-900">
+              <h1 className="text-xl font-bold text-gray-900">
                 Casey - 情感咨询师
               </h1>
-              <p className="text-xs text-gray-500">你的情感陪伴者</p>
+              <p className="text-sm text-gray-500">你的情感陪伴者</p>
             </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="flex h-3 w-3 items-center justify-center rounded-full bg-green-500">
+              <div className="h-1.5 w-1.5 animate-ping rounded-full bg-green-500" />
+            </div>
+            <span className="text-xs text-gray-500">在线</span>
           </div>
         </div>
       </header>
 
       {/* Chat Messages */}
-      <div className="flex-1 overflow-y-auto p-4">
-        <div className="container mx-auto max-w-2xl">
+      <div 
+        className="flex-1 overflow-y-auto p-4"
+        ref={scrollRef}
+      >
+        <div className="container mx-auto max-w-4xl">
           {messages.map((message) => (
             <div
               key={message.id}
-              className={`flex gap-3 mb-4 ${
+              className={`flex gap-3 mb-6 ${
                 message.role === 'user' ? 'justify-end' : 'justify-start'
               }`}
             >
               {message.role === 'assistant' && (
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-pink-500 to-purple-600">
-                  <span className="text-white text-sm">❤️</span>
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-pink-500 to-purple-600 shadow-md">
+                  <span className="text-white text-lg">❤️</span>
                 </div>
               )}
               <div
-                className={`max-w-[80%] rounded-2xl px-4 py-3 ${
+                className={`max-w-[80%] rounded-2xl px-5 py-4 shadow-md ${
                   message.role === 'user'
                     ? 'bg-gradient-to-br from-pink-500 to-purple-600 text-white'
-                    : 'bg-white text-gray-900 shadow-sm'
+                    : 'bg-white text-gray-900'
                 }`}
               >
                 {message.content}
               </div>
               {message.role === 'user' && (
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gray-300">
-                  <span className="text-white text-sm">👤</span>
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gray-300 shadow-md">
+                  <span className="text-white text-lg">👤</span>
                 </div>
               )}
             </div>
           ))}
 
           {isTyping && (
-            <div className="flex gap-3 mb-4">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-pink-500 to-purple-600">
-                <span className="text-white text-sm">❤️</span>
+            <div className="flex gap-3 mb-6">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-pink-500 to-purple-600 shadow-md">
+                <span className="text-white text-lg">❤️</span>
               </div>
-              <div className="bg-white rounded-2xl px-4 py-3 shadow-sm">
-                <div className="flex gap-1">
-                  <div className="h-2 w-2 animate-bounce rounded-full bg-gray-400" />
-                  <div className="h-2 w-2 animate-bounce rounded-full bg-gray-400" style={{ animationDelay: '0.1s' }} />
-                  <div className="h-2 w-2 animate-bounce rounded-full bg-gray-400" style={{ animationDelay: '0.2s' }} />
+              <div className="bg-white rounded-2xl px-5 py-4 shadow-md">
+                <div className="flex gap-1.5">
+                  <div className="h-2 w-2 animate-bounce rounded-full bg-purple-500" />
+                  <div className="h-2 w-2 animate-bounce rounded-full bg-purple-500" style={{ animationDelay: '0.1s' }} />
+                  <div className="h-2 w-2 animate-bounce rounded-full bg-purple-500" style={{ animationDelay: '0.2s' }} />
                 </div>
               </div>
             </div>
@@ -176,34 +192,38 @@ export default function ChatPage() {
       </div>
 
       {/* Input Area */}
-      <div className="border-t bg-white/80 backdrop-blur-sm">
-        <div className="container mx-auto px-4 py-4">
-          <div className="mx-auto max-w-2xl flex gap-2">
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                  e.preventDefault();
-                  handleSend();
-                }
-              }}
-              placeholder="分享你的故事，我在这里倾听..."
-              disabled={isTyping}
-              className="flex-1 px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
-            />
-            <button
-              onClick={handleSend}
-              disabled={!input.trim() || isTyping}
-              className="px-6 py-3 bg-gradient-to-br from-pink-500 to-purple-600 text-white font-semibold rounded-xl hover:from-pink-600 hover:to-purple-700 disabled:opacity-50"
-            >
-              发送
-            </button>
+      <div className="border-t bg-white/80 backdrop-blur-sm sticky bottom-0">
+        <div className="container mx-auto px-4 py-6">
+          <div className="mx-auto max-w-4xl">
+            <div className="flex gap-3 items-end">
+              <div className="flex-1">
+                <input
+                  type="text"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault();
+                      handleSend();
+                    }
+                  }}
+                  placeholder="分享你的故事，我在这里倾听..."
+                  disabled={isTyping}
+                  className="w-full px-5 py-4 border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-lg disabled:opacity-50 transition-all"
+                />
+              </div>
+              <button
+                onClick={handleSend}
+                disabled={!input.trim() || isTyping}
+                className="px-8 py-4 bg-gradient-to-br from-pink-500 to-purple-600 text-white font-bold rounded-2xl hover:from-pink-600 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-xl text-lg"
+              >
+                发送
+              </button>
+            </div>
+            <p className="text-center text-xs text-gray-400 mt-3">
+              按 Enter 发送消息，Shift + Enter 换行
+            </p>
           </div>
-          <p className="text-center text-xs text-gray-400 mt-2">
-            按 Enter 发送，Shift + Enter 换行
-          </p>
         </div>
       </div>
     </div>
