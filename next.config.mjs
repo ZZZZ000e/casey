@@ -1,11 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',      // 核心设置：开启静态导出，生成 out 文件夹
+  output: 'export',
+  distDir: 'out', // 强制指定输出目录名为 out
   images: {
-    unoptimized: true,   // 必须设置：静态导出不支持 Next.js 默认的图片优化
+    unoptimized: true,
   },
-  // 如果你的资源加载路径有问题，可以尝试解除下面这行的注释
-  // assetPrefix: './', 
+  // 避免在打包时因为静态路由问题导致失败
+  trailingSlash: true, 
 };
 
 export default nextConfig;
