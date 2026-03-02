@@ -19,12 +19,8 @@ jobs:
       - name: Install pnpm
         run: npm install -g pnpm
 
-      - name: Clear all config files and cache
-        run: |
-          rm -rf node_modules .next out || true
-
-      - name: Reinstall dependencies
-        run: pnpm install
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
 
       - name: Build Next.js project
         run: pnpm run build
