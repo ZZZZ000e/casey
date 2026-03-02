@@ -21,7 +21,6 @@ jobs:
 
       - name: Clear all config files and cache
         run: |
-          rm -f next.config.* || true
           rm -rf node_modules .next out || true
 
       - name: Reinstall dependencies
